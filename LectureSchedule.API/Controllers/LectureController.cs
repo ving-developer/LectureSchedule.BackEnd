@@ -24,16 +24,18 @@ namespace LectureSchedule.API.Controllers
             return _context.Lectures;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}",Name = "FindLecture")]
         public ActionResult<Lecture> GetById([FromRoute]int id)
         {
             return _context.Lectures.FirstOrDefault(lec => lec.LectureId == id);
         }
 
         [HttpPost]
-        public IActionResult Post()
+        public ActionResult<Lecture> Post([FromBody] Lecture lecture)
         {
-            return Ok($"LectureController Post at {DateTime.Now}");
+            _context.Lectures.Add(lecture);
+            _context.SaveChanges();
+            return CreatedAtRoute("FindLecture", new { id = lecture.LectureId }, lecture);
         }
 
         [HttpPut("{id}")]
