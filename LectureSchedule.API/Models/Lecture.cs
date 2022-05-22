@@ -4,7 +4,7 @@ namespace LectureSchedule.API.Models
 {
     public class Lecture
     {
-        public int LactureId { get; set; }
+        public int LectureId { get; set; }
 
         public string Local { get; set; }
 

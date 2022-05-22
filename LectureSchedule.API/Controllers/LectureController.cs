@@ -1,6 +1,9 @@
-﻿using LectureSchedule.API.Models;
+﻿using LectureSchedule.API.Data;
+using LectureSchedule.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LectureSchedule.API.Controllers
 {
@@ -8,10 +11,23 @@ namespace LectureSchedule.API.Controllers
     [Route("[controller]")]
     public class LectureController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult<Lecture> Get()
+        private readonly DataContext _context;
+
+        public LectureController(DataContext context)
         {
-            return new Lecture();
+            _context = context;
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<Lecture>> Get()
+        {
+            return _context.Lectures;
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<Lecture> GetById([FromRoute]int id)
+        {
+            return _context.Lectures.FirstOrDefault(lec => lec.LectureId == id);
         }
 
         [HttpPost]
