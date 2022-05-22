@@ -284,3 +284,4 @@ obj/
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore,aspnetcore
 
 **/appsettings.Development.json
+**/*.db
