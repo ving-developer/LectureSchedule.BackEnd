@@ -31,6 +31,7 @@ namespace LectureSchedule.API
             services.AddDbContext<DataContext>(
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
+            services.AddCors();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -53,6 +54,10 @@ namespace LectureSchedule.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors( policy => policy.AllowAnyOrigin()
+                                         .AllowAnyHeader()
+                                         .AllowAnyMethod());
 
             app.UseEndpoints(endpoints =>
             {

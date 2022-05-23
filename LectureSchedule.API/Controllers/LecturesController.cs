@@ -9,11 +9,11 @@ namespace LectureSchedule.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class LectureController : ControllerBase
+    public class LecturesController : ControllerBase
     {
         private readonly DataContext _context;
 
-        public LectureController(DataContext context)
+        public LecturesController(DataContext context)
         {
             _context = context;
         }
