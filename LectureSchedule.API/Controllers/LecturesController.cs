@@ -47,7 +47,12 @@ namespace LectureSchedule.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            return Ok($"LectureController Put with id {id} at {DateTime.Now}");
+            var lecture = _context.Lectures.FirstOrDefault(lec => lec.LectureId == id);
+            if (lecture == null)
+                return NotFound();
+            _context.Lectures.Remove(lecture);
+            _context.SaveChanges();
+            return Ok(lecture);
         }
     }
 }
