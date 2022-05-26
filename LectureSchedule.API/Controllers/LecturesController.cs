@@ -1,5 +1,5 @@
-﻿using LectureSchedule.API.Data;
-using LectureSchedule.API.Models;
+﻿using LectureSchedule.Data;
+using LectureSchedule.Domain;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -11,9 +11,9 @@ namespace LectureSchedule.API.Controllers
     [Route("[controller]")]
     public class LecturesController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly LectureScheduleContext _context;
 
-        public LecturesController(DataContext context)
+        public LecturesController(LectureScheduleContext context)
         {
             _context = context;
         }
@@ -27,7 +27,7 @@ namespace LectureSchedule.API.Controllers
         [HttpGet("{id}",Name = "FindLecture")]
         public ActionResult<Lecture> GetById([FromRoute]int id)
         {
-            return _context.Lectures.FirstOrDefault(lec => lec.LectureId == id);
+            return _context.Lectures.FirstOrDefault(lec => lec.Id == id);
         }
 
         [HttpPost]
@@ -35,7 +35,7 @@ namespace LectureSchedule.API.Controllers
         {
             _context.Lectures.Add(lecture);
             _context.SaveChanges();
-            return CreatedAtRoute("FindLecture", new { id = lecture.LectureId }, lecture);
+            return CreatedAtRoute("FindLecture", new { id = lecture.Id }, lecture);
         }
 
         [HttpPut("{id}")]
@@ -47,7 +47,7 @@ namespace LectureSchedule.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var lecture = _context.Lectures.FirstOrDefault(lec => lec.LectureId == id);
+            var lecture = _context.Lectures.FirstOrDefault(lec => lec.Id == id);
             if (lecture == null)
                 return NotFound();
             _context.Lectures.Remove(lecture);
