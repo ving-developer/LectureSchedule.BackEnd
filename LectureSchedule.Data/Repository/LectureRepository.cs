@@ -13,13 +13,18 @@ namespace LectureSchedule.Data.Repository
 
         public async Task<Lecture[]> GetAllAsync()
         {
-            return await GetAllAsync(lec => lec.TicketLots, lec => lec.PublicityCampaigns);
+            return await _context.Lectures
+                           .Include(lec => lec.TicketLots)
+                           .Include(lec => lec.PublicityCampaigns)
+                           .OrderBy(lec => lec.Id)
+                           .ToArrayAsync();
         }
 
         public async Task<Lecture[]> GetAllLecturesSpeakersAsync()
         {
             return await _context.Lectures
                            .Include(lec => lec.TicketLots)
+                           .Include(lec => lec.PublicityCampaigns)
                            .Include(lec => lec.SpeakerLectures)
                            .ThenInclude(sl => sl.Speaker)
                            .OrderBy(lec => lec.Id)
@@ -30,6 +35,7 @@ namespace LectureSchedule.Data.Repository
         {
             return await _context.Lectures
                            .Include(lec => lec.TicketLots)
+                           .Include(lec => lec.PublicityCampaigns)
                            .Include(lec => lec.SpeakerLectures)
                            .ThenInclude(sl => sl.Speaker)
                            .OrderBy(lec => lec.Id)

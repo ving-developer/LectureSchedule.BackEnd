@@ -9,8 +9,6 @@ namespace LectureSchedule.Data.Repository.Interface
     {
         Task<T> GetSingleByFilterAsync(Expression<Func<T, bool>> predicate);
 
-        Task<T[]> GetAllAsync(params Expression<Func<T, object>>[] includes);
-
         void Add(T entity);
 
         void Update(T entity);

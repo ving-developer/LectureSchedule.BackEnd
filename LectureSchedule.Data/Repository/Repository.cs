@@ -37,19 +37,6 @@ namespace LectureSchedule.Data.Repository
             _context.Update(entity);
         }
 
-        public async Task<T[]> GetAllAsync(params Expression<Func<T, object>>[] includes)
-        {
-            IQueryable<T> query = _context.Set<T>();
-            if (includes is not null)
-            {
-                //includes in the object query each of the lambdas parameters passed to this function
-                query = includes.Aggregate(query,
-                  (current, include) => current.Include(include));
-            }
-            
-            return await query.ToArrayAsync();
-        }
-
         public async Task<T> GetSingleByFilterAsync(Expression<Func<T, bool>> predicate)
         {
             return await _context.Set<T>().AsNoTracking().SingleOrDefaultAsync(predicate);

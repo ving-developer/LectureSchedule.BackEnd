@@ -11,6 +11,15 @@ namespace LectureSchedule.Data.Repository
     {
         public SpeakerRepository(LectureScheduleContext context) : base(context){}
 
+        public async Task<Speaker[]> GetAllAsync()
+        {
+            return await _context.Speakers
+                           .Include(speak => speak.SpeakerLectures)
+                           .ThenInclude(sl => sl.Speaker)
+                           .OrderBy(speak => speak.Id)
+                           .ToArrayAsync();
+        }
+
         public async Task<Speaker[]> GetAllSpeakerLectureAsync()
         {
             return await _context.Speakers
