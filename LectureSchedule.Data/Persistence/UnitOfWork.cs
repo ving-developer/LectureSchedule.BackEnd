@@ -27,9 +27,9 @@ namespace LectureSchedule.Data.Persistence
             get { return _speakerRepository ?? new SpeakerRepository(_context); }
         }
 
-        public async Task CommitAsync()
+        public async Task<bool> CommitAsync()
         {
-            await _context.SaveChangesAsync();
+            return (await _context.SaveChangesAsync() > 0);
         }
 
         public void Dispose()
