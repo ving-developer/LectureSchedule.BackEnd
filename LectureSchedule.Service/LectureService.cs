@@ -1,4 +1,4 @@
-﻿using LectureSchedule.Data.Persistence;
+﻿using LectureSchedule.Data.Persistence.Interface;
 using LectureSchedule.Domain;
 using LectureSchedule.Service.Interface;
 using System;
@@ -8,9 +8,9 @@ namespace LectureSchedule.Service
 {
     public class LectureService : ILectureService
     {
-        private readonly UnitOfWork _unit;
+        private readonly IUnitOfWork _unit;
 
-        public LectureService(UnitOfWork unit)
+        public LectureService(IUnitOfWork unit)
         {
             _unit = unit;
         }
@@ -69,7 +69,7 @@ namespace LectureSchedule.Service
                 _unit.LectureRepository.Update(model);
                 if (await _unit.CommitAsync())
                 {
-                    return lecture;
+                    return model;
                 }
                 return null;
 

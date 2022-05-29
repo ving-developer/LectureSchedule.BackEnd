@@ -1,9 +1,7 @@
-﻿using LectureSchedule.Data.Context;
-using LectureSchedule.Domain;
+﻿using LectureSchedule.Domain;
+using LectureSchedule.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace LectureSchedule.API.Controllers
 {
@@ -11,48 +9,101 @@ namespace LectureSchedule.API.Controllers
     [Route("[controller]")]
     public class LecturesController : ControllerBase
     {
-        private readonly LectureScheduleContext _context;
+        private readonly ILectureService _lectureService;
 
-        public LecturesController(LectureScheduleContext context)
+        public LecturesController(ILectureService lectureService)
         {
-            _context = context;
+            _lectureService = lectureService;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Lecture>> Get()
+        public async Task<ActionResult<Lecture[]>> Get()
         {
-            return _context.Lectures;
+            try
+            {
+                var lectures = await _lectureService.GetAllLecturesSpeakersAsync();
+                if (lectures is null) return NotFound("No lectures found");
+                return lectures;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         [HttpGet("{id}",Name = "FindLecture")]
-        public ActionResult<Lecture> GetById([FromRoute]int id)
+        public async Task<ActionResult<Lecture>> GetByIdAsync([FromRoute]int id)
         {
-            return _context.Lectures.FirstOrDefault(lec => lec.Id == id);
+            try
+            {
+                var lecture = await _lectureService.GetByIdAsync(id);
+                if (lecture is null) return NotFound("No lecture found");
+                return lecture;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("search-theme")]
+        public async Task<ActionResult<Lecture[]>> FindByThemeAsync([FromQuery] string theme)
+        {
+            try
+            {
+                var lectures = await _lectureService.GetLecturesByThemeAsync(theme);
+                if (lectures is null) return NotFound("No lecture found");
+                return lectures;
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         [HttpPost]
-        public ActionResult<Lecture> Post([FromBody] Lecture lecture)
+        public async Task<ActionResult<Lecture>> PostAsync([FromBody] Lecture model)
         {
-            _context.Lectures.Add(lecture);
-            _context.SaveChanges();
-            return CreatedAtRoute("FindLecture", new { id = lecture.Id }, lecture);
+            try
+            {
+                var createdLecture = await _lectureService.AddLecture(model);
+                if(createdLecture == null) return BadRequest();
+                return CreatedAtRoute("FindLecture", new { id = createdLecture.Id }, createdLecture);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id)
+        public async Task<IActionResult> PutAsync([FromRoute]int id, [FromBody] Lecture model)
         {
-            return Ok($"LectureController Put with id {id} at {DateTime.Now}");
+            try
+            {
+                var createdLecture = await _lectureService.UpdateLecture(id, model);
+                if (createdLecture == null) return BadRequest();
+                return NoContent();
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var lecture = _context.Lectures.FirstOrDefault(lec => lec.Id == id);
-            if (lecture == null)
-                return NotFound();
-            _context.Lectures.Remove(lecture);
-            _context.SaveChanges();
-            return Ok(lecture);
+            try
+            {
+                return await _lectureService.DeleteLecture(id) ?
+                    Ok() :
+                    BadRequest();
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }

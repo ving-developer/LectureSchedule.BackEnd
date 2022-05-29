@@ -1,4 +1,8 @@
 using LectureSchedule.Data.Configuration;
+using LectureSchedule.Data.Persistence;
+using LectureSchedule.Data.Persistence.Interface;
+using LectureSchedule.Service;
+using LectureSchedule.Service.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +26,13 @@ namespace LectureSchedule.API
         {
             services.ConfigureDbConnection(Configuration.GetConnectionString("Default"));
             services.AddCors();
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(
+                x => x.SerializerSettings.ReferenceLoopHandling = 
+                    Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+            //Add dependency injection
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ILectureService, LectureService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LectureSchedule.API", Version = "v1" });
