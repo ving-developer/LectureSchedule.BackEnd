@@ -1,4 +1,4 @@
-﻿using LectureSchedule.Data;
+﻿using LectureSchedule.Data.Context;
 using LectureSchedule.Domain;
 using Microsoft.AspNetCore.Mvc;
 using System;

@@ -1,11 +1,11 @@
 ﻿using LectureSchedule.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace LectureSchedule.Data
+namespace LectureSchedule.Data.Context
 {
     public class LectureScheduleContext : DbContext
     {
-        public LectureScheduleContext(DbContextOptions<LectureScheduleContext> options) : base(options) {}
+        public LectureScheduleContext(DbContextOptions<LectureScheduleContext> options) : base(options) { }
 
         public DbSet<Lecture> Lectures { get; set; }
 
@@ -21,7 +21,7 @@ namespace LectureSchedule.Data
         {
             //Double primary key, the EntityFramework will understand that this table links the two tables with the N:N relationship
             modelBuilder.Entity<SpeakerLecture>()
-                .HasKey(sp => new { sp.LectureId, sp.SpeakerId});
+                .HasKey(sp => new { sp.LectureId, sp.SpeakerId });
         }
     }
 }
