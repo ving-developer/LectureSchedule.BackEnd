@@ -1,22 +1,22 @@
-﻿using LectureSchedule.Domain;
+﻿using LectureSchedule.Service.DTO;
 using System.Threading.Tasks;
 
 namespace LectureSchedule.Service.Interface
 {
     public interface ILectureService
     {
-        Task<Lecture> GetByIdAsync(int lectureId);
+        Task<LectureDTO> GetByIdAsync(int lectureId);
 
-        Task<Lecture> AddLecture(Lecture lecture);
+        Task<LectureDTO> AddLecture(LectureDTO lectureDTO);
 
-        Task<Lecture> UpdateLecture(int lectureId, Lecture model);
+        Task<LectureDTO> UpdateLecture(int lectureId, LectureDTO model);
 
         Task<bool> DeleteLecture(int lectureId);
 
-        Task<Lecture[]> GetAllAsync();
+        Task<LectureDTO[]> GetAllAsync();
 
-        Task<Lecture[]> GetLecturesByThemeAsync(string theme);
+        Task<LectureDTO[]> GetLecturesByThemeAsync(string theme);
 
-        Task<Lecture[]> GetAllLecturesSpeakersAsync();
+        Task<LectureDTO[]> GetAllLecturesSpeakersAsync();
     }
 }

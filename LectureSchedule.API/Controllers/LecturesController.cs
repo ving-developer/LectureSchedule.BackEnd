@@ -1,4 +1,4 @@
-﻿using LectureSchedule.Domain;
+﻿using LectureSchedule.Service.DTO;
 using LectureSchedule.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,12 +17,12 @@ namespace LectureSchedule.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Lecture[]>> Get()
+        public async Task<ActionResult<LectureDTO[]>> Get()
         {
             try
             {
                 var lectures = await _lectureService.GetAllLecturesSpeakersAsync();
-                if (lectures is null) return NotFound("No lectures found");
+                if (lectures is null) return NoContent();
                 return lectures;
             }
             catch
@@ -32,12 +32,12 @@ namespace LectureSchedule.API.Controllers
         }
 
         [HttpGet("{id}",Name = "FindLecture")]
-        public async Task<ActionResult<Lecture>> GetByIdAsync([FromRoute]int id)
+        public async Task<ActionResult<LectureDTO>> GetByIdAsync([FromRoute]int id)
         {
             try
             {
                 var lecture = await _lectureService.GetByIdAsync(id);
-                if (lecture is null) return NotFound("No lecture found");
+                if (lecture is null) return NoContent();
                 return lecture;
             }
             catch
@@ -47,12 +47,12 @@ namespace LectureSchedule.API.Controllers
         }
 
         [HttpGet("search-theme")]
-        public async Task<ActionResult<Lecture[]>> FindByThemeAsync([FromQuery] string theme)
+        public async Task<ActionResult<LectureDTO[]>> FindByThemeAsync([FromQuery] string theme)
         {
             try
             {
                 var lectures = await _lectureService.GetLecturesByThemeAsync(theme);
-                if (lectures is null) return NotFound("No lecture found");
+                if (lectures is null) return NoContent();
                 return lectures;
             }
             catch
@@ -62,7 +62,7 @@ namespace LectureSchedule.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Lecture>> PostAsync([FromBody] Lecture model)
+        public async Task<ActionResult<LectureDTO>> PostAsync([FromBody] LectureDTO model)
         {
             try
             {
@@ -77,7 +77,7 @@ namespace LectureSchedule.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync([FromRoute]int id, [FromBody] Lecture model)
+        public async Task<IActionResult> PutAsync([FromRoute]int id, [FromBody] LectureDTO model)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace LectureSchedule.API.Controllers
             }
             catch
             {
-                throw;
+                throw new System.Exception($"Error deleting lecture from id: {id}");
             }
         }
     }
