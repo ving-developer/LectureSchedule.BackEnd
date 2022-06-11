@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -10,7 +11,7 @@ namespace LectureSchedule.Service.DTO
 
         public string Local { get; set; }
 
-        public string Date { get; set; }
+        public DateTime Date { get; set; }
 
         [Required, StringLength(50,MinimumLength = 4)]
         public string Theme { get; set; }
