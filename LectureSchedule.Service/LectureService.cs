@@ -2,6 +2,7 @@
 using LectureSchedule.Data.Persistence.Interface;
 using LectureSchedule.Domain;
 using LectureSchedule.Service.DTO;
+using LectureSchedule.Service.Exceptions;
 using LectureSchedule.Service.Interface;
 using System;
 using System.Threading.Tasks;
@@ -55,7 +56,7 @@ namespace LectureSchedule.Service
             try
             {
                 var lecture = await _unit.LectureRepository.GetSingleByFilterAsync(lec => lec.Id == lectureId);
-                if (lecture is null) throw new Exception("Cannot find Lecture to be deleted");
+                if (lecture is null) throw new NotFoundException(lectureId);
                 _unit.LectureRepository.Delete(lecture);
 
                 return await _unit.CommitAsync();

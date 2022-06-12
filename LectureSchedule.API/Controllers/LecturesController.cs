@@ -1,7 +1,9 @@
 ﻿using LectureSchedule.Service.DTO;
 using LectureSchedule.Service.Interface;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using LectureSchedule.Service.Exceptions;
 
 namespace LectureSchedule.API.Controllers
 {
@@ -27,7 +29,7 @@ namespace LectureSchedule.API.Controllers
             }
             catch
             {
-                throw;
+                return StatusCode(StatusCodes.Status500InternalServerError, "Same error when get lectures");
             }
         }
 
@@ -42,7 +44,7 @@ namespace LectureSchedule.API.Controllers
             }
             catch
             {
-                throw;
+                return StatusCode(StatusCodes.Status500InternalServerError, "Same error when find lecture by id");
             }
         }
 
@@ -57,7 +59,7 @@ namespace LectureSchedule.API.Controllers
             }
             catch
             {
-                throw;
+                return StatusCode(StatusCodes.Status500InternalServerError, "Same error when find lectures by theme");
             }
         }
 
@@ -67,12 +69,12 @@ namespace LectureSchedule.API.Controllers
             try
             {
                 var createdLecture = await _lectureService.AddLecture(model);
-                if(createdLecture == null) return BadRequest();
+                if(createdLecture == null) return StatusCode(StatusCodes.Status500InternalServerError, $"Error in commit when post lecture: {model}");
                 return CreatedAtRoute("FindLecture", new { id = createdLecture.Id }, createdLecture);
             }
             catch
             {
-                throw;
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Same error when post lecture: {model}");
             }
         }
 
@@ -87,7 +89,7 @@ namespace LectureSchedule.API.Controllers
             }
             catch
             {
-                throw;
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Same error when updating lecture from id: {id}");
             }
         }
 
@@ -98,11 +100,14 @@ namespace LectureSchedule.API.Controllers
             {
                 return await _lectureService.DeleteLecture(id) ?
                     Ok() :
-                    BadRequest();
+                    StatusCode(StatusCodes.Status500InternalServerError, $"Error in commit when deleting lecture from id: {id}");
+            }
+            catch(NotFoundException ex) {
+                return BadRequest(ex.Message);
             }
             catch
             {
-                throw new System.Exception($"Error deleting lecture from id: {id}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Same error when deleting lecture from id: {id}");
             }
         }
     }
