@@ -24,20 +24,23 @@ namespace LectureSchedule.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Add configurations
             services.ConfigureDbConnection(Configuration.GetConnectionString("Default"));
             services.AddCors();
             services.AddControllers().AddNewtonsoftJson(
                 x => x.SerializerSettings.ReferenceLoopHandling = 
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+            services.AddAutoMapper(System.AppDomain.CurrentDomain.GetAssemblies());
             //Add dependency injection
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<ILectureService, LectureService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>()
+                .AddScoped<ILectureService, LectureService>()
+                .AddScoped<ITicketLotService, TicketLotService>();
+            //Add Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LectureSchedule.API", Version = "v1" });
             });
-            services.AddAutoMapper(System.AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

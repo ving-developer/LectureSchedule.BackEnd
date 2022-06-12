@@ -7,6 +7,7 @@ namespace LectureSchedule.Data.Persistence.Interface
     {
         ILectureRepository LectureRepository { get; }
         ISpeakerRepository SpeakerRepository { get; }
+        ITicketLotRepository TicketLotRepository { get; }
         Task<bool> CommitAsync();
     }
 }

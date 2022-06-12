@@ -9,6 +9,8 @@ namespace LectureSchedule.Data.Repository.Interface
     {
         Task<T> GetSingleByFilterAsync(Expression<Func<T, bool>> predicate);
 
+        Task<T[]> GetMultipleByFilterAsync(Expression<Func<T, bool>> predicate);
+
         void Add(T entity);
 
         void Update(T entity);

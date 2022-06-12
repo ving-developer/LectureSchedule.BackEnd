@@ -46,5 +46,10 @@ namespace LectureSchedule.Data.Repository
         {
             return (await _context.SaveChangesAsync() > 0);
         }
+
+        public async Task<T[]> GetMultipleByFilterAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().AsNoTracking().Where(predicate).ToArrayAsync();
+        }
     }
 }
