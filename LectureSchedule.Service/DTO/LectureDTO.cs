@@ -30,10 +30,10 @@ namespace LectureSchedule.Service.DTO
         [Required, Phone]
         public string Phone { get; set; }
 
-        public IEnumerable<TicketLotDTO> TicketLotsDTO { get; set; }
+        public IEnumerable<TicketLotDTO> TicketLots { get; set; }
 
-        public IEnumerable<PublicityCampaignDTO> PublicityCampaignsDTO { get; set; }
+        public IEnumerable<PublicityCampaignDTO> PublicityCampaigns { get; set; }
 
-        public IEnumerable<SpeakerDTO> SpeakerLecturesDTO { get; set; }
+        public IEnumerable<SpeakerDTO> SpeakerLectures { get; set; }
     }
 }
