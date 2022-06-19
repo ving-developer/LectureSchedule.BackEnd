@@ -3,14 +3,16 @@ using System;
 using LectureSchedule.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace LectureSchedule.Data.Migrations
 {
     [DbContext(typeof(LectureScheduleContext))]
-    partial class LectureScheduleContextModelSnapshot : ModelSnapshot
+    [Migration("20220619212639_Adding-Identity")]
+    partial class AddingIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

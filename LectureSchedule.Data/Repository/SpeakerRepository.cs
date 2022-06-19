@@ -35,7 +35,7 @@ namespace LectureSchedule.Data.Repository
                            .Include(speak => speak.SpeakerLectures)
                            .ThenInclude(sl => sl.Speaker)
                            .OrderBy(speak => speak.Id)
-                           .Where(speak => speak.Name.ToLower().Contains(name.ToLower()))
+                           .Where(speak => speak.User.FirstName.ToLower().Contains(name.ToLower()))
                            .ToArrayAsync();
         }
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LectureSchedule.Domain.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace LectureSchedule.Domain
@@ -22,6 +23,10 @@ namespace LectureSchedule.Domain
         public string Email { get; set; }
 
         public string Phone { get; set; }
+
+        public int UserId { get; set; }
+
+        public User User { get; set; }
 
         public IEnumerable<TicketLot> TicketLots { get; set; }
 
