@@ -60,7 +60,7 @@ namespace LectureSchedule.Service
                 var lecture = await _unit.LectureRepository.GetSingleByFilterAsync(lec => lec.Id == lectureId);
                 if (lecture is null) throw new NotFoundException(lectureId);
                 _unit.LectureRepository.Delete(lecture);
-
+                _ = _uploadService.DeleteImage(lecture.ImageUrl);
                 return await _unit.CommitAsync();
             }
             catch
