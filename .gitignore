@@ -285,3 +285,4 @@ obj/
 
 **/appsettings.Development.json
 **/*.db*
+/LectureSchedule.API/Resources/Images/*

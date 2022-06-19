@@ -1,4 +1,5 @@
 ﻿using LectureSchedule.Service.DTO;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
 namespace LectureSchedule.Service.Interface
@@ -18,5 +19,7 @@ namespace LectureSchedule.Service.Interface
         Task<LectureDTO[]> GetLecturesByThemeAsync(string theme);
 
         Task<LectureDTO[]> GetAllLecturesSpeakersAsync();
+
+        Task<string> UploadLectureImage(int lectureId, IFormFile imageFile);
     }
 }

@@ -110,5 +110,22 @@ namespace LectureSchedule.API.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, $"Same error when deleting lecture from id: {id}");
             }
         }
+
+        [HttpPost("update-picture/{lectureId}")]
+        public async Task<ActionResult<string>> UploadAsync(int lectureId)
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                var imageFileName = await _lectureService.UploadLectureImage(lectureId, file);
+                if (imageFileName == null) return BadRequest();
+                return Created($"/resources/images/{imageFileName}", new { ImageUrl = imageFileName });
+
+            }
+            catch
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Same error when uploading profile picture from lecture id: {lectureId}");
+            }
+        }
     }
 }

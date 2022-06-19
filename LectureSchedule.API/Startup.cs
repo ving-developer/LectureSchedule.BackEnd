@@ -5,10 +5,13 @@ using LectureSchedule.Service;
 using LectureSchedule.Service.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.IO;
 
 namespace LectureSchedule.API
 {
@@ -35,7 +38,8 @@ namespace LectureSchedule.API
             //Add dependency injection
             services.AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddScoped<ILectureService, LectureService>()
-                .AddScoped<ITicketLotService, TicketLotService>();
+                .AddScoped<ITicketLotService, TicketLotService>()
+                .AddScoped<IUploadService, UploadService>();
             //Add Swagger
             services.AddSwaggerGen(c =>
             {
@@ -66,6 +70,12 @@ namespace LectureSchedule.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
+                RequestPath = new PathString("/resources")
             });
         }
     }

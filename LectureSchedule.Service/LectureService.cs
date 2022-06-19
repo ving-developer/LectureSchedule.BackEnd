@@ -4,7 +4,7 @@ using LectureSchedule.Domain;
 using LectureSchedule.Service.DTO;
 using LectureSchedule.Service.Exceptions;
 using LectureSchedule.Service.Interface;
-using System;
+using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
 namespace LectureSchedule.Service
@@ -13,11 +13,13 @@ namespace LectureSchedule.Service
     {
         private readonly IUnitOfWork _unit;
         private readonly IMapper _mapper;
+        private readonly IUploadService _uploadService;
 
-        public LectureService(IUnitOfWork unit, IMapper mapper)
+        public LectureService(IUnitOfWork unit, IMapper mapper, IUploadService uploadService)
         {
             _unit = unit;
             _mapper = mapper;
+            _uploadService = uploadService;
         }
 
         public async Task<LectureDTO> GetByIdAsync(int lectureId)
@@ -121,6 +123,31 @@ namespace LectureSchedule.Service
             {
                 var lectures = await _unit.LectureRepository.GetLecturesByThemeAsync(theme);
                 return _mapper.Map<LectureDTO[]>(lectures);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<string> UploadLectureImage(int lectureId, IFormFile imageFile)
+        {
+            try
+            {
+                if (imageFile.Length > 0)
+                {
+                    var lecture = await _unit.LectureRepository.GetSingleByFilterAsync(lec => lec.Id == lectureId);
+                    if (lecture is not null)
+                    {
+                        _ = _uploadService.DeleteImage(lecture.ImageUrl);
+                        var newProfoleImage = await _uploadService.UploadImage(imageFile);
+                        lecture.ImageUrl = newProfoleImage;
+                        _unit.LectureRepository.Update(lecture);
+                        await _unit.CommitAsync();
+                        return newProfoleImage;
+                    }
+                }
+                return null;
             }
             catch
             {
