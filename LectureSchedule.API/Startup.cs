@@ -1,17 +1,23 @@
 using LectureSchedule.Data.Configuration;
+using LectureSchedule.Data.Context;
 using LectureSchedule.Data.Persistence;
 using LectureSchedule.Data.Persistence.Interface;
+using LectureSchedule.Domain.Identity;
 using LectureSchedule.Service;
 using LectureSchedule.Service.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.IO;
+using System.Text;
 using System.Text.Json.Serialization;
 
 namespace LectureSchedule.API
@@ -31,6 +37,34 @@ namespace LectureSchedule.API
             //Add configurations
             services.ConfigureDbConnection(Configuration.GetConnectionString("Default"));
             services.AddCors();
+            services.AddIdentityCore<User>(
+                options =>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 4;
+                }
+            ).AddRoles<Role>()
+             .AddRoleManager<RoleManager<Role>>()
+             .AddSignInManager<SignInManager<User>>()
+             .AddRoleValidator<RoleValidator<Role>>()
+             .AddEntityFrameworkStores<LectureScheduleContext>()
+             .AddDefaultTokenProviders();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(
+                        options =>
+                        {
+                            options.TokenValidationParameters = new TokenValidationParameters
+                            {
+                                ValidateIssuerSigningKey = true,
+                                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["EncryptionKey"])),
+                                ValidateIssuer = false,
+                                ValidateAudience = false
+                            };
+                        }
+                    );
             services.AddControllers()
                 .AddJsonOptions(
                     options => options.JsonSerializerOptions
