@@ -12,6 +12,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.IO;
+using System.Text.Json.Serialization;
 
 namespace LectureSchedule.API
 {
@@ -30,8 +31,14 @@ namespace LectureSchedule.API
             //Add configurations
             services.ConfigureDbConnection(Configuration.GetConnectionString("Default"));
             services.AddCors();
-            services.AddControllers().AddNewtonsoftJson(
-                x => x.SerializerSettings.ReferenceLoopHandling = 
+            services.AddControllers()
+                .AddJsonOptions(
+                    options => options.JsonSerializerOptions
+                               .Converters.Add(new JsonStringEnumConverter())
+                )//It will return the description of properties of type Enum, instead of returning the value of Enums.
+                 //It will also save the enum description string in the database instead of the value
+                .AddNewtonsoftJson(
+                options => options.SerializerSettings.ReferenceLoopHandling = 
                     Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
             services.AddAutoMapper(System.AppDomain.CurrentDomain.GetAssemblies());
@@ -39,7 +46,9 @@ namespace LectureSchedule.API
             services.AddScoped<IUnitOfWork, UnitOfWork>()
                 .AddScoped<ILectureService, LectureService>()
                 .AddScoped<ITicketLotService, TicketLotService>()
-                .AddScoped<IUploadService, UploadService>();
+                .AddScoped<IUploadService, UploadService>()
+                .AddScoped<IUserService, UserService>()
+                .AddScoped<ITokenService, TokenService>();
             //Add Swagger
             services.AddSwaggerGen(c =>
             {
