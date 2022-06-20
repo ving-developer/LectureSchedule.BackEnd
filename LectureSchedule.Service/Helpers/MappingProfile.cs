@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using LectureSchedule.Service.DTO;
 using LectureSchedule.Domain;
+using LectureSchedule.Domain.Identity;
 
 namespace LectureSchedule.Service.Helpers
 {
@@ -12,6 +13,8 @@ namespace LectureSchedule.Service.Helpers
             CreateMap<PublicityCampaign, PublicityCampaignDTO>().ReverseMap();
             CreateMap<Speaker, SpeakerDTO>().ReverseMap();
             CreateMap<TicketLot, TicketLotDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UpdateUserDTO>().ReverseMap();
         }
     }
 }

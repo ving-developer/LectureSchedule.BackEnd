@@ -12,6 +12,7 @@ namespace LectureSchedule.Data.Persistence
         private LectureRepository _lectureRepository;
         private SpeakerRepository _speakerRepository;
         private TicketLotRepository _ticketLotRepository;
+        private UserRepository _userRepository;
 
         public UnitOfWork(LectureScheduleContext context)
         {
@@ -31,6 +32,11 @@ namespace LectureSchedule.Data.Persistence
         public ITicketLotRepository TicketLotRepository
         {
             get { return _ticketLotRepository ?? new TicketLotRepository(_context); }
+        }
+
+        public IUserRepository UserRepository
+        {
+            get { return _userRepository ?? new UserRepository(_context); }
         }
 
         public async Task<bool> CommitAsync()
