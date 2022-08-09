@@ -104,6 +104,7 @@ namespace LectureSchedule.API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseCors( policy => policy.AllowAnyOrigin()

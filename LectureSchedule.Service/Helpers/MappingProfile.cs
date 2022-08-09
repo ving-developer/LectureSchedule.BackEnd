@@ -14,7 +14,9 @@ namespace LectureSchedule.Service.Helpers
             CreateMap<Speaker, SpeakerDTO>().ReverseMap();
             CreateMap<TicketLot, TicketLotDTO>().ReverseMap();
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UserLoginDTO>().ReverseMap();
             CreateMap<User, UpdateUserDTO>().ReverseMap();
+            CreateMap<UserDTO, UpdateUserDTO>().ReverseMap();
         }
     }
 }

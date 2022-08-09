@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
 
-        public string Title { get; set; }
+        public string Graduation { get; set; }
 
         public string UserName { get; set; }
 
@@ -16,7 +16,7 @@
 
         public string Phone { get; set; }
 
-        public string Function { get; set; }
+        public string UserFunction { get; set; }
 
         public string Description { get; set; }
 

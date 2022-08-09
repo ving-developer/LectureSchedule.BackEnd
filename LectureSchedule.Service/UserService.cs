@@ -5,6 +5,7 @@ using LectureSchedule.Service.DTO;
 using LectureSchedule.Service.Interface;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 
 namespace LectureSchedule.Service
@@ -15,16 +16,19 @@ namespace LectureSchedule.Service
         private readonly SignInManager<User> _signInManager;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unit;
+        private readonly ITokenService _tokenService;
 
         public UserService(UserManager<User> userManager,
                            SignInManager<User> signInManager,
                            IMapper mapper,
-                           IUnitOfWork unit)
+                           IUnitOfWork unit,
+                           ITokenService tokenService)
         {
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._mapper = mapper;
             this._unit = unit;
+            this._tokenService = tokenService;
         }
 
 
@@ -60,6 +64,10 @@ namespace LectureSchedule.Service
         {
             try
             {
+                if(await CheckUserExistAsync(newUser.UserName))
+                {
+                    throw new TaskCanceledException("This username already in use.");
+                }
                 var user = _mapper.Map<User>(newUser);
                 var result = await _userManager.CreateAsync(user,newUser.Password);
                 if (result.Succeeded)
@@ -84,7 +92,6 @@ namespace LectureSchedule.Service
                 if(user is not null)
                 {
                     var userDTO = _mapper.Map<UpdateUserDTO>(user);
-
                     return userDTO;
                 }
 
@@ -113,6 +120,29 @@ namespace LectureSchedule.Service
                         return userReturn;
                     }
                 }
+                return null;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        
+        public async Task<object> LoginUserAsync(UserLoginDTO userLoginDTO)
+        {
+            try
+            {
+                var user = await GetUserByUserNameAsync(userLoginDTO.UserName);
+                var userDTO = _mapper.Map<UserDTO>(user);
+                if (user is null) throw new TaskCanceledException("User not found");
+                var loginResult = await CheckUserPasswordAsync(userDTO, userLoginDTO.Password);
+                if (loginResult.Succeeded)
+                    return new
+                    {
+                        userName = user.UserName,
+                        firstName = user.FirstName,
+                        token = _tokenService.GetToken(user).Result
+                    };
                 return null;
             }
             catch

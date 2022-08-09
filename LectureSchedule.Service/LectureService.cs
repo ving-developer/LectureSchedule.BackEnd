@@ -91,11 +91,11 @@ namespace LectureSchedule.Service
             }
         }
 
-        public async Task<LectureDTO[]> GetAllAsync()
+        public async Task<LectureDTO[]> GetAllAsync(int userId)
         {
             try
             {
-                var lectures = await _unit.LectureRepository.GetAllAsync();
+                var lectures = await _unit.LectureRepository.GetAllAsync(userId);
                 return _mapper.Map<LectureDTO[]>(lectures);
             }
             catch
@@ -104,11 +104,11 @@ namespace LectureSchedule.Service
             }
         }
 
-        public async Task<LectureDTO[]> GetAllLecturesSpeakersAsync()
+        public async Task<LectureDTO[]> GetAllLecturesSpeakersAsync(int userId)
         {
             try
             {
-                var lectures = await _unit.LectureRepository.GetAllLecturesSpeakersAsync();
+                var lectures = await _unit.LectureRepository.GetAllLecturesSpeakersAsync(userId);
                 return _mapper.Map<LectureDTO[]>(lectures);
             }
             catch
@@ -117,11 +117,11 @@ namespace LectureSchedule.Service
             }
         }
 
-        public async Task<LectureDTO[]> GetLecturesByThemeAsync(string theme)
+        public async Task<LectureDTO[]> GetLecturesByThemeAsync(int userId, string theme)
         {
             try
             {
-                var lectures = await _unit.LectureRepository.GetLecturesByThemeAsync(theme);
+                var lectures = await _unit.LectureRepository.GetLecturesByThemeAsync(userId, theme);
                 return _mapper.Map<LectureDTO[]>(lectures);
             }
             catch

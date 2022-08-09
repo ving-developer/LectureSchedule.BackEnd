@@ -14,11 +14,11 @@ namespace LectureSchedule.Service.Interface
 
         Task<bool> DeleteLecture(int lectureId);
 
-        Task<LectureDTO[]> GetAllAsync();
+        Task<LectureDTO[]> GetAllAsync(int userId);
 
-        Task<LectureDTO[]> GetLecturesByThemeAsync(string theme);
+        Task<LectureDTO[]> GetLecturesByThemeAsync(int userId, string theme);
 
-        Task<LectureDTO[]> GetAllLecturesSpeakersAsync();
+        Task<LectureDTO[]> GetAllLecturesSpeakersAsync(int userId);
 
         Task<string> UploadLectureImage(int lectureId, IFormFile imageFile);
     }

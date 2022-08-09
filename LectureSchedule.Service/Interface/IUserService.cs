@@ -15,5 +15,7 @@ namespace LectureSchedule.Service.Interface
         Task<UserDTO> CreateAccountAsync(UserDTO newUser);
 
         Task<UpdateUserDTO> UpdateAccountAsync(UpdateUserDTO updateUserDTO);
+
+        Task<object> LoginUserAsync(UserLoginDTO updateUserDTO);
     }
 }

@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using LectureSchedule.Service.Exceptions;
+using LectureSchedule.API.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LectureSchedule.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class LecturesController : ControllerBase
     {
@@ -23,7 +26,8 @@ namespace LectureSchedule.API.Controllers
         {
             try
             {
-                var lectures = await _lectureService.GetAllLecturesSpeakersAsync();
+                var userId = User.GetUserId();
+                var lectures = await _lectureService.GetAllLecturesSpeakersAsync(userId);
                 if (lectures is null) return NoContent();
                 return lectures;
             }
@@ -53,7 +57,8 @@ namespace LectureSchedule.API.Controllers
         {
             try
             {
-                var lectures = await _lectureService.GetLecturesByThemeAsync(theme);
+                var userId = User.GetUserId();
+                var lectures = await _lectureService.GetLecturesByThemeAsync(userId,theme);
                 if (lectures is null) return NoContent();
                 return lectures;
             }
@@ -68,6 +73,7 @@ namespace LectureSchedule.API.Controllers
         {
             try
             {
+                model.UserId = User.GetUserId();
                 var createdLecture = await _lectureService.AddLecture(model);
                 if(createdLecture == null) return StatusCode(StatusCodes.Status500InternalServerError, $"Error in commit when post lecture: {model}");
                 return CreatedAtRoute("FindLecture", new { id = createdLecture.Id }, createdLecture);
@@ -83,6 +89,7 @@ namespace LectureSchedule.API.Controllers
         {
             try
             {
+                model.UserId = User.GetUserId();
                 var createdLecture = await _lectureService.UpdateLecture(id, model);
                 if (createdLecture == null) return BadRequest();
                 return NoContent();

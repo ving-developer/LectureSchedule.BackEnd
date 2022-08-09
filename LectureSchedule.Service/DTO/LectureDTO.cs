@@ -9,6 +9,8 @@ namespace LectureSchedule.Service.DTO
     {
         public int Id { get; set; }
 
+        public int UserId { get; set; }
+
         public string Local { get; set; }
 
         public DateTime Date { get; set; }
@@ -29,6 +31,8 @@ namespace LectureSchedule.Service.DTO
 
         [Required, Phone]
         public string Phone { get; set; }
+
+        [Required]
 
         public IEnumerable<TicketLotDTO> TicketLots { get; set; }
 
