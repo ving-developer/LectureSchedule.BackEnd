@@ -16,6 +16,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -24,6 +25,8 @@ namespace LectureSchedule.API
 {
     public class Startup
     {
+        private const string BEARER_SECURITY_DEFFINITION = "Bearer";
+        private const string OAUTH2_SCHEME = "oauth2";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -87,6 +90,31 @@ namespace LectureSchedule.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "LectureSchedule.API", Version = "v1" });
+                c.AddSecurityDefinition(BEARER_SECURITY_DEFFINITION, new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = BEARER_SECURITY_DEFFINITION
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = BEARER_SECURITY_DEFFINITION
+                            },
+                            Scheme = OAUTH2_SCHEME,
+                            Name = BEARER_SECURITY_DEFFINITION,
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
+                });
             });
         }
 
