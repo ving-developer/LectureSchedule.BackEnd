@@ -36,7 +36,7 @@ namespace LectureSchedule.API.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<ActionResult<UserDTO>> RegisterAsync(UserDTO user)
+        public async Task<ActionResult<object>> RegisterAsync(UserDTO user)
         {
             try
             {

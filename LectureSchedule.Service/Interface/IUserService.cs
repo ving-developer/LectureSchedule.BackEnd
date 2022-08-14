@@ -12,7 +12,7 @@ namespace LectureSchedule.Service.Interface
 
         Task<SignInResult> CheckUserPasswordAsync(UserDTO user, string password);
 
-        Task<UserDTO> CreateAccountAsync(UserDTO newUser);
+        Task<object> CreateAccountAsync(UserDTO newUser);
 
         Task<UpdateUserDTO> UpdateAccountAsync(UpdateUserDTO updateUserDTO);
 

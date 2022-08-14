@@ -60,7 +60,7 @@ namespace LectureSchedule.Service
             }
         }
 
-        public async Task<UserDTO> CreateAccountAsync(UserDTO newUser)
+        public async Task<object> CreateAccountAsync(UserDTO newUser)
         {
             try
             {
@@ -72,8 +72,13 @@ namespace LectureSchedule.Service
                 var result = await _userManager.CreateAsync(user,newUser.Password);
                 if (result.Succeeded)
                 {
-                    var userToReturn = _mapper.Map<UserDTO>(user);
-                    return userToReturn;
+                    var userToGetToken = _mapper.Map<UpdateUserDTO>(user);
+                    return new
+                    {
+                        userName = user.UserName,
+                        firstName = user.FirstName,
+                        token = _tokenService.GetToken(userToGetToken).Result
+                    };
                 }
 
                 return null;
