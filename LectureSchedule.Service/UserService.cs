@@ -108,21 +108,30 @@ namespace LectureSchedule.Service
             }
         }
 
-        public async Task<UpdateUserDTO> UpdateAccountAsync(UpdateUserDTO updateUserDTO)
+        public async Task<object> UpdateAccountAsync(UpdateUserDTO updateUserDTO)
         {
             try
             {
-                var user = await _unit.UserRepository.GetSingleByFilterAsync(usr => usr.UserName == updateUserDTO.UserName);
+                var user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == updateUserDTO.UserName);
                 if(user is not null)
                 {
+                    updateUserDTO.Id = user.Id;
                     _mapper.Map(updateUserDTO, user);
-                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                    var result = _userManager.ResetPasswordAsync(user, token, updateUserDTO.Password);
+                    if(updateUserDTO.Password != null)
+                    {
+                        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                        await _userManager.ResetPasswordAsync(user, token, updateUserDTO.Password);
+                    }
                     _unit.UserRepository.Update(user);
                     if(await _unit.CommitAsync())
                     {
-                        var userReturn = _mapper.Map<UpdateUserDTO>(user);
-                        return userReturn;
+                        var userToGetToken = _mapper.Map<UpdateUserDTO>(user);
+                        return new
+                        {
+                            userName = user.UserName,
+                            firstName = user.FirstName,
+                            token = _tokenService.GetToken(userToGetToken).Result
+                        };
                     }
                 }
                 return null;

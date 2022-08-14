@@ -80,6 +80,8 @@ namespace LectureSchedule.API.Controllers
         {
             try
             {
+                if (updateUserDto.UserName != User.GetUserName())
+                    return Unauthorized();
                 var updatedUser = await _userService.UpdateAccountAsync(updateUserDto);
                 if (updatedUser is null) return NotFound("Can't be find user");
                 return Ok(updatedUser);
