@@ -62,7 +62,7 @@ namespace LectureSchedule.API.Controllers
             {
                 var result = await _userService.LoginUserAsync(loginDTO);
                 if(result is null)
-                    return NotFound();
+                    return Unauthorized();
                 return Ok(result);
             }
             catch (TaskCanceledException ex)
