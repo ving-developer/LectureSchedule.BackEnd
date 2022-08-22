@@ -1,4 +1,5 @@
 ﻿using LectureSchedule.Data.Context;
+using LectureSchedule.Data.Pagination;
 using LectureSchedule.Data.Repository.Interface;
 using LectureSchedule.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -11,39 +12,21 @@ namespace LectureSchedule.Data.Repository
     {
         public LectureRepository(LectureScheduleContext context) : base(context){}
 
-        public async Task<Lecture[]> GetAllAsync(int userId)
+        public async Task<PageList<Lecture>> GetAllAsync(int userId, PageParams pageParams, bool includeSpeakers)
         {
-            return await _context.Lectures
+            var query = _context.Lectures
                            .Include(lec => lec.TicketLots)
                            .Include(lec => lec.PublicityCampaigns)
-                           .Where(lec => lec.UserId == userId)
-                           .OrderBy(lec => lec.Id)
-                           .ToArrayAsync();
-        }
+                           .Where(lec => lec.Theme.ToLower().Contains(pageParams.Term.ToLower())
+                                && lec.UserId == userId);
 
-        public async Task<Lecture[]> GetAllLecturesSpeakersAsync(int userId)
-        {
-            return await _context.Lectures
-                           .Include(lec => lec.TicketLots)
-                           .Include(lec => lec.PublicityCampaigns)
-                           .Include(lec => lec.SpeakerLectures)
-                           .ThenInclude(sl => sl.Speaker)
-                           .Where(lec => lec.UserId == userId)
-                           .OrderBy(lec => lec.Id)
-                           .ToArrayAsync();
-        }
+            if (includeSpeakers)
+            {
+                query = query.Include(l => l.SpeakerLectures)
+                    .ThenInclude(sl => sl.Speaker);
+            }
 
-        public async Task<Lecture[]> GetLecturesByThemeAsync(int userId, string theme)
-        {
-            return await _context.Lectures
-                           .Include(lec => lec.TicketLots)
-                           .Include(lec => lec.PublicityCampaigns)
-                           .Include(lec => lec.SpeakerLectures)
-                           .ThenInclude(sl => sl.Speaker)
-                           .Where(lec => lec.Theme.ToLower().Contains(theme.ToLower())
-                                && lec.UserId == userId)
-                           .OrderBy(lec => lec.Id)
-                           .ToArrayAsync();
+            return await PageList <Lecture>.CreateAsync(query.OrderBy(lec => lec.Id), pageParams.PageNumber, pageParams.PageSize);
         }
     }
 }

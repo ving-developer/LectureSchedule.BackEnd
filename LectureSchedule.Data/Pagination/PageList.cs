@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace LectureSchedule.Data.Pagination
@@ -16,6 +16,8 @@ namespace LectureSchedule.Data.Pagination
         public int PageSize { get; set; }
 
         public int TotalCount { get; set; }
+
+        public PageList(){ }
 
         public PageList(List<T> items, int count, int pageNumber, int pageSize)
         {

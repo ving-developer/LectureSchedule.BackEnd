@@ -2,6 +2,7 @@
 using LectureSchedule.Service.DTO;
 using LectureSchedule.Domain;
 using LectureSchedule.Domain.Identity;
+using LectureSchedule.Data.Pagination;
 
 namespace LectureSchedule.Service.Helpers
 {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LectureSchedule.Data.Pagination
+﻿namespace LectureSchedule.Data.Pagination
 {
     public class PageParams
     {
@@ -28,6 +22,6 @@ namespace LectureSchedule.Data.Pagination
             }
         }
 
-        public string Term { get; set; }
+        public string Term { get; set; } = string.Empty;
     }
 }

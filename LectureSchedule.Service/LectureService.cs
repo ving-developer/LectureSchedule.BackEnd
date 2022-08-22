@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using LectureSchedule.Data.Pagination;
 using LectureSchedule.Data.Persistence.Interface;
 using LectureSchedule.Domain;
 using LectureSchedule.Service.DTO;
@@ -91,38 +92,18 @@ namespace LectureSchedule.Service
             }
         }
 
-        public async Task<LectureDTO[]> GetAllAsync(int userId)
+        public async Task<PageList<LectureDTO>> GetAllAsync(int userId, PageParams pageParams, bool includeSpeakers)
         {
             try
             {
-                var lectures = await _unit.LectureRepository.GetAllAsync(userId);
-                return _mapper.Map<LectureDTO[]>(lectures);
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        public async Task<LectureDTO[]> GetAllLecturesSpeakersAsync(int userId)
-        {
-            try
-            {
-                var lectures = await _unit.LectureRepository.GetAllLecturesSpeakersAsync(userId);
-                return _mapper.Map<LectureDTO[]>(lectures);
-            }
-            catch
-            {
-                throw;
-            }
-        }
-
-        public async Task<LectureDTO[]> GetLecturesByThemeAsync(int userId, string theme)
-        {
-            try
-            {
-                var lectures = await _unit.LectureRepository.GetLecturesByThemeAsync(userId, theme);
-                return _mapper.Map<LectureDTO[]>(lectures);
+                var lectures = await _unit.LectureRepository.GetAllAsync(userId, pageParams, includeSpeakers);
+                if(lectures is null) return null;
+                var lecturesDto = _mapper.Map<PageList<LectureDTO>>(lectures);
+                lecturesDto.CurrentPage = lectures.CurrentPage;
+                lecturesDto.TotalPages = lectures.TotalPages;
+                lecturesDto.TotalCount = lectures.TotalCount;
+                lecturesDto.PageSize = lectures.PageSize;
+                return lecturesDto;
             }
             catch
             {

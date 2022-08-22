@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LectureSchedule.Service.Exceptions;
 using LectureSchedule.API.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using LectureSchedule.Data.Pagination;
 
 namespace LectureSchedule.API.Controllers
 {
@@ -22,13 +23,15 @@ namespace LectureSchedule.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<LectureDTO[]>> Get()
+        public async Task<ActionResult<PageList<LectureDTO>>> Get([FromQuery] PageParams pageParams)
         {
             try
             {
                 var userId = User.GetUserId();
-                var lectures = await _lectureService.GetAllLecturesSpeakersAsync(userId);
+                var lectures = await _lectureService.GetAllAsync(userId, pageParams, true);
                 if (lectures is null) return NoContent();
+                Response.AddPagination(lectures.CurrentPage,lectures.PageSize,
+                    lectures.TotalCount, lectures.TotalPages);
                 return lectures;
             }
             catch
@@ -49,22 +52,6 @@ namespace LectureSchedule.API.Controllers
             catch
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, "Same error when find lecture by id");
-            }
-        }
-
-        [HttpGet("search-theme")]
-        public async Task<ActionResult<LectureDTO[]>> FindByThemeAsync([FromQuery] string theme)
-        {
-            try
-            {
-                var userId = User.GetUserId();
-                var lectures = await _lectureService.GetLecturesByThemeAsync(userId,theme);
-                if (lectures is null) return NoContent();
-                return lectures;
-            }
-            catch
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Same error when find lectures by theme");
             }
         }
 

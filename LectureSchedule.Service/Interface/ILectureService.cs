@@ -1,4 +1,5 @@
-﻿using LectureSchedule.Service.DTO;
+﻿using LectureSchedule.Data.Pagination;
+using LectureSchedule.Service.DTO;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
@@ -14,11 +15,7 @@ namespace LectureSchedule.Service.Interface
 
         Task<bool> DeleteLecture(int lectureId);
 
-        Task<LectureDTO[]> GetAllAsync(int userId);
-
-        Task<LectureDTO[]> GetLecturesByThemeAsync(int userId, string theme);
-
-        Task<LectureDTO[]> GetAllLecturesSpeakersAsync(int userId);
+        Task<PageList<LectureDTO>> GetAllAsync(int userId, PageParams pageParams, bool includeSpeakers);
 
         Task<string> UploadLectureImage(int lectureId, IFormFile imageFile);
     }
