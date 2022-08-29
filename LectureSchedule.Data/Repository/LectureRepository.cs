@@ -17,8 +17,9 @@ namespace LectureSchedule.Data.Repository
             var query = _context.Lectures
                            .Include(lec => lec.TicketLots)
                            .Include(lec => lec.PublicityCampaigns)
-                           .Where(lec => lec.Theme.ToLower().Contains(pageParams.Term.ToLower())
-                                && lec.UserId == userId);
+                           .Where(lec => (lec.Theme.ToLower().Contains(pageParams.Term.ToLower())
+                                          || lec.Local.ToLower().Contains(pageParams.Term.ToLower()))
+                                          && lec.UserId == userId);
 
             if (includeSpeakers)
             {
