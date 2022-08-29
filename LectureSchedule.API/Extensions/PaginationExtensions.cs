@@ -19,7 +19,7 @@ namespace LectureSchedule.API.Extensions
                 paginationHeader,
                 options
             ));
-            response.Headers.Add("Acess-Control-Expose-Headers", "Pagination");
+            response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
         }
     }
 }
